@@ -29,6 +29,16 @@ void transpose_submit(int M, int N, int A[N][M], int B[M][N])
     int enn = bsizen * ( N / bsizen );
     int enm = bsizem * ( M / bsizem );
     int i, j, ii, jj, tmp;
+    /* three for
+    * first: major part of A and B, if else statement distinguishes
+    * which blocks diagonally cause conflict miss, and it's the deformation
+    * of function trans_db as involving more small blocks where the location
+    * of the first elements no longer always be 0, as (ii,jj) shift exists.
+    * the following code set bsize=8 as default, and can be still modified
+    * second: lower left corner
+    * third: upper right corner
+    * fourth: lower right corner
+    * */
     for (ii = 0; ii < enn; ii += bsizen){
         for (jj = 0;  jj < enm; jj += bsizem) {
             if(ii!=jj) {
