@@ -25,4 +25,4 @@ Persist and enjoy the scenery!!!!
 
 I'm doing Cachelab independently to now. ENJOYED A LOT!
 
-
+My solutions are in folders without "solution" charaters, haha!
