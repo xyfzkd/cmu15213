@@ -43,13 +43,31 @@ void transpose_submit(int M, int N, int A[N][M], int B[M][N])
         for (jj = 0;  jj < enm; jj += bsizem) {
             if(ii!=jj) {
                 for (i = ii; i < ii + bsizen; i++) {
-                    for (j = jj; j < jj + bsizem; j++) {
+                    for (j = jj; j < jj + bsizem/2; j++) {
                         tmp = A[i][j];
-                        //B[j][i] = A[i][j];
                         B[j][i] = tmp;
                     }
                 }
-            }else {
+                for (i = ii+bsizen-1; i >= ii; i--) {
+                    for (j = jj+bsizem/2; j < jj + bsizem; j++) {
+                        tmp = A[i][j];
+                        B[j][i] = tmp;
+                    }
+                }
+            }else if(0){
+                for (i = ii; i < ii + bsizen/2; i++) {
+                    for (j = jj; j < jj + bsizem; j++) {
+                        tmp = A[i][j];
+                        B[j][i] = tmp;
+                    }
+                }
+                for (i = ii+bsizen/2; i < ii + bsizen; i++) {
+                    for (j = jj; j < jj + bsizem; j++) {
+                        tmp = A[i][j];
+                        B[j][i] = tmp;
+                    }
+                }
+	    }else {
                 for (i = ii; i < ii + bsizen; i++) {
                     for (j = jj; j < jj+bsizem; j++) {
                         tmp = A[i][j];
