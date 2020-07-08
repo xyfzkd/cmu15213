@@ -6,7 +6,7 @@ for 32*32 case
 
     I just use 8*8-size blocks to transpose
 
-for 64*64 case
+for 64\*64 case
     They are different. The address of upper 8*8
     block are the same as the ones of lower.
     64ints*4bytes_per_ints*4lines = 2^10
@@ -50,3 +50,14 @@ for 64*64 case
     conflict miss, and when writing to B, no conflict miss.
 
     BUT STILL PROBLEM!
+
+    Improvment on July 8, 2020:
+    I wrote a program to moniter nmisses in each block
+    ```
+    blockmiss -f f0.v2.trace
+    ```
+    and I find 
+    8 misses in the diagoanl blocks,
+    12 misses in the other blocks, 64*12*2>1300 bad!
+    I have to develop a new approach.
+
