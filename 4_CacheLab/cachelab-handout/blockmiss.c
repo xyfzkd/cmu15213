@@ -25,14 +25,15 @@ or nhits when reading from A matrix\n");
     printf("  -p        oPerations. reading(0) or writing (1)? default: 0\n");
     printf("  -r        hit (1) Or miss (0) to record? default: 0\n");
 }
-void blockmiss(FILE* fp,bool p, bool r){
+void blockmiss(FILE* fp,int p, int r){
     unsigned int ad,size,nmiss;
     char horm,op;
     int diff,quotient1,quotient2,remainder;
     while(fscanf(fp,"%c %x,%d %c",&op,&ad,&size,&horm)>0)
     {
+        if (op=='L') diff = ad-afe;
+        else if (op=='S') diff = ad-bfe;
         if((op=='L'&&p==0)||(op=='S'&&p==1)){
-            diff = ad-afe;
             diff = diff/4;
             quotient1 = diff/0x200;//determine the line of the block matrix
             remainder = diff%0x200;
@@ -64,8 +65,8 @@ int main(int argc, char** argv){
 	int opt,ch;
 	char* file;
 	FILE* fp;
-    bool op=0, r=0;
-	while ((opt=getopt(argc,argv,"hf:p::r::"))!=-1){
+    int op=0, r=0;
+	while ((opt=getopt(argc,argv,"hf:p:r:"))!=-1){
 		switch(opt){
 			case 'h':
 				usage(argv);
@@ -74,10 +75,10 @@ int main(int argc, char** argv){
                 file = optarg;
                 break;
             case 'p':
-                op = optarg;
+                op = atoi(optarg);
                 break;
             case 'r':
-                r = optarg;
+                r = atoi(optarg);
                 break;
             default:
                 usage(argv);
