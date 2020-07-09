@@ -39,46 +39,69 @@ void transpose_submit(int M, int N, int A[N][M], int B[M][N])
     * third: upper right corner
     * fourth: lower right corner
     * */
-    for (ii = 0; ii < enn; ii += bsizen){
-        for (jj = 0;  jj < enm; jj += bsizem) {
-            if(ii!=jj) {
-                for (i = ii; i < ii + bsizen; i++) {
-                    for (j = jj; j < jj + bsizem/2; j++) {
-                        tmp = A[i][j];
-                        B[j][i] = tmp;
+    if(M==32&&N==32){
+        for (ii = 0; ii < enn; ii += bsizen){
+            for (jj = 0;  jj < enm; jj += bsizem) {
+                if(ii!=jj) {
+                    for (i = ii; i < ii + bsizen; i++) {
+                        for (j = jj; j < jj + bsizem/2; j++) {
+                            tmp = A[i][j];
+                            B[j][i] = tmp;
+                        }
+                    }
+                    for (i = ii+bsizen-1; i >= ii; i--) {
+                        for (j = jj+bsizem/2; j < jj + bsizem; j++) {
+                            tmp = A[i][j];
+                            B[j][i] = tmp;
+                        }
+                    }
+                }else {
+                    for (i = ii; i < ii + bsizen; i++) {
+                        for (j = jj; j < jj+bsizem; j++) {
+                            tmp = A[i][j];
+                            B[2*ii+7-i][2*jj+7-j] = tmp;
+                        }
+                    }
+                    for (i = ii; i < ii + bsizen/2; i++) {
+                        for (j = jj; j < jj+ii+bsizem; j++) {
+                            tmp = B[i][j];
+                            B[i][j] = B[2*jj+7-j][2*ii+7-i];
+                            B[2*jj+7-j][2*ii+7-i] = tmp;
+                        }
                     }
                 }
-                for (i = ii+bsizen-1; i >= ii; i--) {
-                    for (j = jj+bsizem/2; j < jj + bsizem; j++) {
-                        tmp = A[i][j];
-                        B[j][i] = tmp;
+            }
+        }
+    }
+    else if(M==64&&N==64){
+        for (ii = 0; ii < enn; ii += bsizen){
+            for (jj = 0;  jj < enm; jj += bsizem) {
+                if(ii!=jj) {
+                    for (i = ii; i < ii + bsizen; i++) {
+                        for (j = jj; j < jj+bsizem; j++) {
+                            B[ii+jj+7-i][ii+jj+7-j] = A[i][j];
+                        }
                     }
-                }
-            }else if(0){
-                for (i = ii; i < ii + bsizen/2; i++) {
-                    for (j = jj; j < jj + bsizem; j++) {
-                        tmp = A[i][j];
-                        B[j][i] = tmp;
+                    for (i = jj; i < jj + bsizen; i++) {
+                        for (j = ii; j < jj+ii+bsizem-i; j++) {
+                            tmp = B[i][j];
+                            B[i][j] = B[ii+jj+7-j][ii+jj+7-i];
+                            B[ii+jj+7-j][ii+jj+7-i] = tmp;
+                        }
                     }
-                }
-                for (i = ii+bsizen/2; i < ii + bsizen; i++) {
-                    for (j = jj; j < jj + bsizem; j++) {
-                        tmp = A[i][j];
-                        B[j][i] = tmp;
+                }else {
+                    for (i = ii; i < ii + bsizen; i++) {
+                        for (j = jj; j < jj+bsizem; j++) {
+                            tmp = A[i][j];
+                            B[2*ii+7-i][2*jj+7-j] = tmp;
+                        }
                     }
-                }
-	    }else {
-                for (i = ii; i < ii + bsizen; i++) {
-                    for (j = jj; j < jj+bsizem; j++) {
-                        tmp = A[i][j];
-                        B[2*ii+7-i][2*jj+7-j] = tmp;
-                    }
-                }
-                for (i = ii; i < ii + bsizen; i++) {
-                    for (j = jj; j < jj+ii+bsizem-i; j++) {
-                        tmp = B[i][j];
-                        B[i][j] = B[2*jj+7-j][2*ii+7-i];
-                        B[2*jj+7-j][2*ii+7-i] = tmp;
+                    for (i = ii; i < ii + bsizen; i++) {
+                        for (j = jj; j < jj+ii+bsizem-i; j++) {
+                            tmp = B[i][j];
+                            B[i][j] = B[2*jj+7-j][2*ii+7-i];
+                            B[2*jj+7-j][2*ii+7-i] = tmp;
+                        }
                     }
                 }
             }
