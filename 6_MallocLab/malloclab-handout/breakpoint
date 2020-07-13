@@ -1,0 +1,5 @@
+break mm_init
+break extend_heap
+break coalesce
+r -f short1-bal.rep
+p (long *) mem_brk
