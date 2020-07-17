@@ -1,0 +1,23 @@
+break mm_free
+r -f traces/amptjp-bal.rep
+c 13
+call check_list()
+c
+call check_list()
+c
+call check_list()
+c
+call check_list()
+c
+call check_list()
+c
+call check_list()
+c
+call check_list()
+c
+call check_list()
+c
+call check_list()
+c
+call check_list()
+
