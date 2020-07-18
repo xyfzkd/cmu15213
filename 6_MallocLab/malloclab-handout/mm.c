@@ -232,7 +232,7 @@ void *mm_malloc(size_t size)
     size_t asize;
     size_t extendsize;
     char *bp;
-    escaped_coalescing();
+    //escaped_coalescing();
     if(size == 0) return NULL;
     if (size <= DSIZE) asize = 2*DSIZE;
     else asize = align(size)+DSIZE;
@@ -309,8 +309,7 @@ static void *coalesce(void *bp){
 
     }
     else{
-        void *pf = prev_block(bp);
-        void *nf = next_block(bp);
+        void *pf = prev_block(bp),*nf = next_block(bp);
         size += get_size(f_bp(prev_block(bp)))+get_size(h_bp(next_block(bp)));
         put(h_bp(prev_block(bp)),pack(size,0));
         put(f_bp(prev_block(bp)),pack(size,0));
@@ -338,19 +337,19 @@ static void *coalesce(void *bp){
 
             f_next_set(f_prev(free_list_bp),pf);
             f_prev_set(pf,f_prev(free_list_bp));
-            f_next_set(pf,f_next(free_list_bp));
-            f_prev_set(f_next(free_list_bp),pf);
-        }else{
-            free_list_bp = f_next(free_list_bp);
+            f_next_set(pf,free_list_bp);
+            f_prev_set(free_list_bp,pf);
+        }else
+            {
             f_prev_set(f_next(pf),f_prev(pf));
             f_next_set(f_prev(pf),f_next(pf));
             f_next_set(f_prev(nf),f_next(nf));
             f_prev_set(f_next(nf),f_prev(nf));
-
-            f_next_set(f_prev(free_list_bp),pf);
-            f_prev_set(pf,f_prev(free_list_bp));
-            f_next_set(pf,f_next(free_list_bp));
-            f_prev_set(f_next(free_list_bp),pf);
+            unsigned int *free_list_bp_new = f_prev(free_list_bp);
+            f_next_set(f_prev(free_list_bp_new),pf);
+            f_prev_set(pf,f_prev(free_list_bp_new));
+            f_next_set(pf,free_list_bp_new);
+            f_prev_set(free_list_bp_new,pf);
         }
         free_list_bp = pf;
     }
