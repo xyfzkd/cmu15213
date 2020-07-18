@@ -180,6 +180,8 @@ a 348 160
 f 347
 a 349 72
 ```
+### case 4 bug
+
 
 ## Results
 first fit
