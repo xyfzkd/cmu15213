@@ -181,7 +181,35 @@ f 347
 a 349 72
 ```
 ### case 4 bug
+run `am*.rep`
 
+```
+a 414 4072
+a 415 4072
+f 400
+f 413
+a 416 4072
+a 417 4072
+a 418 4072
+a 419 4072
+a 420 4072
+a 421 4072
+a 422 4072
+a 423 4072
+f 418
+f 417
+f 416
+f 405
+f 392
+f 387
+f 382
+f 369
+f 415
+f 414
+```
+when running`f 414`, only one blocks left as many block left before `f 414`. Analyze the rep file and I realize this is the case 4 bug.
+
+There is no discussion by situation in the slide. You can see the discussion in the code. 
 
 ## Results
 first fit
@@ -224,4 +252,45 @@ Total          76%  112372  0.469758   239
 
 ```
 
+explict results
 
+```
+Results for mm malloc:
+trace  valid  util     ops      secs  Kops
+ 0       yes   93%    5694  0.000172 33143
+ 1       yes   95%    5848  0.000144 40583
+ 2       yes   96%    6648  0.000283 23516
+ 3       yes   98%    5380  0.000154 34958
+ 4       yes   99%   14400  0.000179 80402
+ 5       yes   55%   12000  0.025434   472
+ 6       yes   51%   24000  0.089475   268
+ 7       yes   89%    4800  0.000546  8796
+ 8       yes   85%    4800  0.000555  8649
+ 9       yes   26%   14401  0.060342   239
+10       yes   45%   14401  0.002141  6727
+Total          76%  112372  0.179424   626
+
+Perf index = 45 (util) + 40 (thru) = 85/100
+
+```
+## Discuss
+when I know little about the cycled linked list, I just hate discussion by situation,
+
+wow
+
+so many situation
+
+* one element in the list, how to deal with next\_p and prev\_p, and how to add free element to the list?
+* how to place, the situation is a complication because it will change the list, change the list\_count, change the first addr of the element in the list
+* how about coalescing? the case discussion in the sildes is all? maybe red hollow cycle needs consideration. When list\_count limited, how to deal with those so many pointer?
+* free\_list\_bp. Root pointer brings difficuties to the problem. Situation discussion!
+* ...
+
+Dizzy!
+
+I debug for a week, wantless!
+
+and last I know the thinking of the ex\_list is linked with the graph,
+I should know more about the graph.
+
+hahaha, just enjoy!

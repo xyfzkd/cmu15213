@@ -313,12 +313,14 @@ static void *coalesce(void *bp){
         size += get_size(f_bp(prev_block(bp)))+get_size(h_bp(next_block(bp)));
         put(h_bp(prev_block(bp)),pack(size,0));
         put(f_bp(prev_block(bp)),pack(size,0));
+        /* two elements in the list */
         if((f_next(nf)==pf)&&(f_next(pf)==nf)){
             f_next_set(pf,pf);
             f_prev_set(pf,pf);
             free_list_bp = pf;
             return pf;
         }
+        /* three or more elements, nf and pf are adjacent, two situations */
         else if(f_next(nf)==pf){
             f_prev_set(f_next(pf),pf);
             f_next_set(pf,f_next(pf));
@@ -329,7 +331,9 @@ static void *coalesce(void *bp){
             f_next_set(pf,f_next(nf));
             f_next_set(f_prev(pf),pf);
             f_prev_set(pf,f_prev(pf));
-        }else if(free_list_bp!=pf&&free_list_bp!=nf){
+        }
+        /* free_list_bp is neither pf nor nf */
+        else if(free_list_bp!=pf&&free_list_bp!=nf){
             f_prev_set(f_next(pf),f_prev(pf));
             f_next_set(f_prev(pf),f_next(pf));
             f_next_set(f_prev(nf),f_next(nf));
@@ -339,8 +343,12 @@ static void *coalesce(void *bp){
             f_prev_set(pf,f_prev(free_list_bp));
             f_next_set(pf,free_list_bp);
             f_prev_set(free_list_bp,pf);
-        }else
-            {
+        }
+        /* free_list_bp is either pf or nf, now pf and nf are not adjacent, just
+         * move free_list_bp to other element transform the situation be the same
+         * as the formal
+         */
+        else{
             f_prev_set(f_next(pf),f_prev(pf));
             f_next_set(f_prev(pf),f_next(pf));
             f_next_set(f_prev(nf),f_next(nf));
